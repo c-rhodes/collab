@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Ogidni</title>
+	</head>
+
+	<body>
+		<h1>{{ story_name }}</h1>
+		{% if story %}
+			<p>{{ story.text }}</p>
+		{% else %}
+			<strong>Story does not exist.</strong>
+		{% endif %}
+	</body>
+</html>

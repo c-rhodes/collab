@@ -1,0 +1,15 @@
+{% extends 'ogidni/base.html' %}
+
+{% block title %}{{ genre_name }}{% endblock %}
+
+{% block body_block %}
+	<h1>{{ genre_name }}</h1>
+		
+		{% if pages %}
+			{% for page in pages %}
+				<a href="{{ page.url }}">{{ page.name }}</a><br />
+				{% endfor %}
+		{% else %}
+			<strong>No stories currently in this genre.</strong>
+		{% endif %}
+{% endblock %}

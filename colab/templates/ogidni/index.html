@@ -1,0 +1,15 @@
+{% extends 'ogidni/base.html' %}
+
+{% block body_block %}
+    <h1>Collaborative Writing</h1>
+    
+    {% if stories %}
+        {% for story in stories %}
+            <a href="/ogidni/{{ story.url }}">{{ story.name }}</a> {{ story.upvotes }} | {{ story.downvotes }}</br>
+            <p>{{ story.text }}<p>{{ story.postdate }}</br></br>
+        {% endfor %}
+    {% else %}
+        <strong>No posts.</strong>
+    {% endif %}
+{% endblock %}
+            

@@ -1,0 +1,25 @@
+{% extends 'ogidni/base.html' %}
+
+{% block title %}Start a story{% endblock %}
+{% block body_block %}
+	{% if posted %}
+		<strong>Post successful!</strong><br />
+        <a href="/ogidni/">Return to the homepage.</a><br />
+	{% else %}
+	<h1>Start a story</h1>
+		<form id="story_form" method="post" action="/ogidni/add_story/">
+			{% csrf_token %}
+			{% for hidden in form.hidden_fields %}
+				{{ hidden }}
+			{% endfor %}
+
+			{% for field in form.visible_fields %}
+				{{ field.errors }}
+				{{ field.help_text }}
+				{{ field }} </br>
+			{% endfor %}
+
+			<input type="submit" name="Submit" value="Create Story"/>
+		</form>
+	{% endif %}
+{% endblock %}
