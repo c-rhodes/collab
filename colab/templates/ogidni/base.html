@@ -6,7 +6,8 @@
     	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	    <!-- Bootstrap -->
 	    <link href="{% static 'css/bootstrap-theme.min.css'% }" rel="stylesheet" media="screen">
-	    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+      <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+      <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
         <title>Ogidni - {% block title %}Collaborative writing{% endblock %}</title>
     </head>
@@ -25,11 +26,11 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li {% block nava_1 %}{% endblock %}><a href="index.html">Home</a></li>
+            <li {% block nava_2 %}{% endblock %}><a href="about.html">About</a></li>
+            <li {% block nava_3 %}{% endblock %}><a href="contact.html">Contact</a></li>
           </ul>
-          <ul class="nav navbar-left">
+          <ul class="nav navbar-nav navbar-left">
             {% if user.is_authenticated %}
                 <li><a href="/ogidni/logout/">Logout</a></li>       
                 <li><a href="/ogidni/add_story/">Start story</a></li>
