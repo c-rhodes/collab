@@ -1,5 +1,5 @@
 {% extends 'ogidni/base.html' %}
-
+{% load static %}
 {% block body_block %}
     {% if story %}
 		<a href="/ogidni/{{ story.url }}/pdf">Generate PDF</a>
@@ -22,7 +22,8 @@
 			  <div class="panel-body">
 				{% for reply in replies %}
 					<p>{{ reply.text }}</p>
-					<div class="well well-sm" style="margin-bottom: 0px;">Posted by {{ reply.user }} on {{ reply.postdate }}</div>
+					<div class="well well-sm" style="margin-bottom: 0px;">Posted by {{ reply.user }} on {{ reply.postdate }} <span class="badge">{{ reply.upvotes }} | {{ reply.downvotes }}</span>
+			    	<a class="btn btn-info btn-xs pull-right" href="/ogidni/{{ story.url }}/reply/" role="button">Reply &raquo;</a></div>
 					<br/>
 				{% endfor %}
 		  	  </div>
@@ -41,4 +42,9 @@
 		  </div>
 		</div>
     {% endif %}
+{% endblock %}
+
+{% block external_scripts %}
+    <script src="{% static 'js/ogidni-ajax.js' %}"></script>
+    <script src="{% static 'js/reply-box.js' %}"></script>
 {% endblock %}
