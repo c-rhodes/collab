@@ -11,9 +11,9 @@
 		    <p>{{ story.text }}<p>
 		    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ story.author }} on {{ story.postdate }}
 				<div class="pull-right">
-			    	<a class="btn btn-success btn-xs" onclick="replyvote(UP, S, {{ story.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
-			    	<a class="btn btn-danger btn-xs" onclick="replyvote(DOWN, S, {{ story.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
-			    	<a class="btn btn-info btn-xs" onclick="replyclick(STORY, {{ story.id }})" role="button">Reply &raquo;</a>
+			    	<a class="btn btn-success btn-xs" onclick="replyvote(DIR.UP, TYPE.S, {{ story.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
+			    	<a class="btn btn-danger btn-xs" onclick="replyvote(DIR.DOWN, TYPE.S, {{ story.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
+			    	<a class="btn btn-info btn-xs" onclick="replyclick(TYPE.S, {{ story.id }})" role="button">Reply &raquo;</a>
 			    </div>
 		  </div>
 		</div>
@@ -28,9 +28,9 @@
 					<p>{{ reply.text }}</p>
 					<div class="well well-sm" style="margin-bottom: 0px;">Posted by {{ reply.user }} on {{ reply.postdate }} <span class="badge">{{ reply.upvotes }} | {{ reply.downvotes }}</span>
 						<div class="pull-right" id="r-{{ reply.id }}">
-					    	<a class="btn btn-success btn-xs" onclick="replyvote(UP, {{ reply.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
-					    	<a class="btn btn-danger btn-xs" onclick="replyvote(DOWN, {{ reply.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
-					    	<a class="btn btn-info btn-xs" onclick="replyclick(REPLY, {{ reply.id }})" role="button">Reply &raquo;</a>
+					    	<a class="btn btn-success btn-xs" onclick="replyvote(DIR.UP, TYPE.R, {{ reply.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
+					    	<a class="btn btn-danger btn-xs" onclick="replyvote(DIR.DOWN, TYPE.R, {{ reply.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
+					    	<a class="btn btn-info btn-xs" onclick="replyclick(TYPE.R, {{ reply.id }})" role="button">Reply &raquo;</a>
 					    </div>
 					</div>
 					<br/>
