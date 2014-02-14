@@ -9,3 +9,5 @@ Thumbs.db
 .swo
 *.pyc
 *.db
+
+colab/ogidni.db
