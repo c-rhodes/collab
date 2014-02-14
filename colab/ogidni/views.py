@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 
-from ogidni.models import Story, Genre, Replies
+from ogidni.models import Story, Genre, Reply
 from ogidni.sorts import confidence, hot
 
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
@@ -63,10 +63,12 @@ def vote_story(request):
                 upvotes = story.upvotes + 1
                 story.upvotes = upvotes
                 downvotes = story.downvotes
-            else:
+            elif direction is 2:
                 downvotes = story.downvotes + 1
                 story.downvotes = downvotes
                 upvotes = story.upvotes
+            else:
+                pass
 
             story.save()
 
@@ -85,16 +87,18 @@ def vote_reply(request):
     upvotes = 0
     downvotes = 0
     if reply_id:
-        reply = Replies.objects.get(id=int(reply_id))
+        reply = Reply.objects.get(id=int(reply_id))
         if reply:
             if direction is 1:
                 upvotes = reply.upvotes + 1
                 reply.upvotes = upvotes
                 downvotes = reply.downvotes
-            else:
+            elif direction is 2:
                 downvotes = reply.downvotes + 1
                 reply.downvotes = downvotes
                 upvotes = reply.upvotes
+            else:
+                pass
 
             reply.save()
 
@@ -140,6 +144,7 @@ def add_story(request):
         if form.is_valid():
             story = form.save(commit=False)
             story.author_id = request.user.id
+            story.url = request.POST['name'].replace(' ', '_').lower()
             story.save()
             posted = True
         else:
@@ -148,25 +153,22 @@ def add_story(request):
         form = StoryForm
 
     return render_to_response('ogidni/add_story.html',
-            {'form': form,
-                'posted': posted,
-                }, context)
+            {'form': form, 'posted': posted,}, context)
 
 def index(request):
     context = RequestContext(request)
-    story_list = Story.objects.order_by('-upvotes')
 
     stories = sorted(Story.objects.all(), key=lambda Story: -hot(Story.upvotes, Story.downvotes, datetime.now()))
 
-    for story in stories:
-        s_confidence = confidence(story.upvotes, story.downvotes)
-        print story, s_confidence
+    try:
+        for story in stories:
+            genre = Genre.objects.get(name=story.genre)
+            story.url = genre.url + '/' + story.url
 
-    for story in stories:
-        genre_name = Genre.objects.get(name=story.genre)
-        story.url = story_url_encode(genre_name.name+'/'+story.name)
+        story_dict = {'stories': stories}
+    except Genre.DoesNotExist:
+        pass
 
-    story_dict = {'stories': stories}
     response = render_to_response('ogidni/index.html', story_dict, context)
 
     visits = int(request.COOKIES.get('visits', '0'))
@@ -185,18 +187,13 @@ def index(request):
 
 def genre(request, genre_name_url):
     context = RequestContext(request)
-
-    genre_name = story_url_decode(genre_name_url)
-    context_dict = {'genre_name': genre_name}
-    
+ 
     try:
-        genre = Genre.objects.get(name=genre_name)
+        genre = Genre.objects.get(url=genre_name_url)
         pages = Story.objects.filter(genre=genre.id)
+        context_dict = {'genre': genre}
         context_dict['pages'] = pages
-        context_dict['genre'] = genre
-        for page in pages:
-            page.url = story_url_encode(page.name)
-    except Genre.DoesNotExist:
+    except (Genre.DoesNotExist, Story.DoesNotExist) as e:
         pass
 
 
@@ -205,29 +202,19 @@ def genre(request, genre_name_url):
 def story(request, genre_name_url, story_name_url):
     context = RequestContext(request)
 
-    genre_name = story_url_decode(genre_name_url)
-    story_name = story_url_decode(story_name_url)
-    context_dict = {'story_name': story_name}
-
-    try:    
-        story = Story.objects.get(name=story_name)
-        story.url = story_url_encode(genre_name+'/'+story_name)
-        context_dict['story'] = story
-    except Story.DoesNotExist:
-        pass
-
     try:
-        replies = sorted(Replies.objects.filter(story=story.id), key=lambda Replies: -confidence(Replies.upvotes, Replies.downvotes))
+        genre = Genre.objects.get(url=genre_name_url)
+        story = Story.objects.get(url=story_name_url)
+        context_dict = {'story': story}
+        story.url = genre.url+'/'+story.url
+        replies = sorted(Reply.objects.filter(story=story.id), key=lambda Reply: -confidence(Reply.upvotes, Reply.downvotes))
         context_dict['replies'] = replies
-    except Replies.DoesNotExist:
+    except (Genre.DoesNotExist, Story.DoesNotExist, Reply.DoesNotExist) as e:
         pass
 
     return render_to_response('ogidni/story.html', context_dict, context)
 
 def generate_pdf(request, genre_name_url, story_name_url):
-    genre_name = story_url_decode(genre_name_url)
-    story_name = story_url_decode(story_name_url)
-
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=' + story_name_url + '.pdf'
 
@@ -236,14 +223,11 @@ def generate_pdf(request, genre_name_url, story_name_url):
     p = canvas.Canvas(buffer)
 
     try:    
-        story = Story.objects.get(name=story_name)
-        story.url = story_url_encode(genre_name+'/'+story_name)
-    except Story.DoesNotExist:
-        pass
-
-    try:
-        replies = sorted(Replies.objects.filter(story=story.id), key=lambda Replies: -confidence(Replies.upvotes, Replies.downvotes))
-    except Replies.DoesNotExist:
+        genre = Genre.objects.get(url=genre_name_url)
+        story = Story.objects.get(url=story_name_url)
+        story.url = genre_url+'/'+story.url
+        replies = sorted(Reply.objects.filter(story=story.id), key=lambda Reply: -confidence(Reply.upvotes, Reply.downvotes))
+    except (Genre.DoesNotExist, Story.DoesNotExist, Reply.DoesNotExist) as e:
         pass
 
     p.drawString(100, 750, story.text)
@@ -255,11 +239,3 @@ def generate_pdf(request, genre_name_url, story_name_url):
     buffer.close()
     response.write(pdf)
     return response
-
-
-def story_url_encode(story_name_url):
-    return story_name_url.replace(' ', '_')
-
-def story_url_decode(story_name):
-    return story_name.replace('_', ' ')
-

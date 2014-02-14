@@ -1,0 +1,82 @@
+.
+├── colab
+│   ├── __init__.py
+│   ├── __init__.pyc
+│   ├── settings.py
+│   ├── settings.pyc
+│   ├── urls.py
+│   ├── urls.pyc
+│   ├── wsgi.py
+│   └── wsgi.pyc
+├── colab_tree
+├── manage.py
+├── media
+├── ogidni
+│   ├── admin.py
+│   ├── admin.pyc
+│   ├── forms.py
+│   ├── forms.pyc
+│   ├── __init__.py
+│   ├── __init__.pyc
+│   ├── models.py
+│   ├── models.pyc
+│   ├── sorts.py
+│   ├── sorts.pyc
+│   ├── tests.py
+│   ├── urls.py
+│   ├── urls.pyc
+│   ├── views.py
+│   └── views.pyc
+├── ogidni.db
+├── populate_ogidni.py
+├── profile_images
+│   └── 001_-_FCUiRTM.jpg
+├── static
+│   ├── css
+│   │   ├── bootstrap.css
+│   │   ├── bootstrap.css.map
+│   │   ├── bootstrap.min.css
+│   │   ├── bootstrap-responsive.css
+│   │   ├── bootstrap-theme.css
+│   │   ├── bootstrap-theme.css.map
+│   │   ├── bootstrap-theme.min.css
+│   │   └── display.css
+│   ├── fonts
+│   │   ├── glyphicons-halflings-regular.eot
+│   │   ├── glyphicons-halflings-regular.svg
+│   │   ├── glyphicons-halflings-regular.ttf
+│   │   └── glyphicons-halflings-regular.woff
+│   └── js
+│       ├── bootstrap.js
+│       ├── bootstrap.min.js
+│       ├── jquery-2.1.0.min.js
+│       └── ogidni-ajax.js
+├── stories
+│   ├── Animal Farm
+│   ├── Anthem
+│   ├── Brave New World
+│   ├── Down and Out in Paris and London
+│   ├── Fear and Loathing in Las Vegas
+│   ├── Flowers for Algernon
+│   ├── Infinite Jest
+│   ├── iRobot
+│   ├── Money
+│   ├── Neuromancer
+│   ├── On the Road
+│   ├── Snow Crash
+│   ├── The Adventures of Huckleberry Finn
+│   ├── The Catcher in the Rye
+│   ├── The Hitchhikers Guide to the Galaxy
+│   ├── The Hobbit
+│   └── The Rum Diary
+└── templates
+    └── ogidni
+        ├── add_story.html
+        ├── base.html
+        ├── genre.html
+        ├── index.html
+        ├── login.html
+        ├── register.html
+        └── story.html
+
+11 directories, 68 files

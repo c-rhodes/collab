@@ -26,7 +26,7 @@ def populate():
             'Science Fiction',
             'War']
     
-    genre_objects = [add_genre(genre.lower()) for genre in genres]
+    genre_objects = [add_genre(genre) for genre in genres]
     
     users = ['Cullen', 'Chris', 'Adam', 'Wes', 'Steven', 'David', 'Darren',
             'Michael', 'Hannah', 'Alex', 'Becky', 'Lyla', 'Ayn', 'Abbie',
@@ -46,7 +46,7 @@ def populate():
         story_objects.append(add_story(story_name, story, genre, user))
 
 def add_genre(genre):
-    g = Genre.objects.get_or_create(name=genre)[0]
+    g = Genre.objects.get_or_create(name=genre, url=genre.replace(' ', '_').lower())[0]
     return g
 
 def add_user(username, password, email):
@@ -56,16 +56,16 @@ def add_user(username, password, email):
     return up
 
 def add_story(name, text, genre, author, upvotes=0, downvotes=0):
-    s = Story.objects.get_or_create(name=name, text=text, genre=genre, author=author,
+    s = Story.objects.get_or_create(name=name, text=text, genre=genre, author=author, url=name.replace(' ', '_').lower(),
             upvotes=random.randrange(1000), downvotes=random.randrange(1000), postdate=datetime.now())[0]
     return s
 
 def add_reply(user_id, story_id, parent, text, upvotes=0, downvotes=0, postdate=0):
-    r = Replies.objects.get_or_create(user_id=user_id, story_id=story_id, parent=parent, text=text, upvotes=random.randrange(1000), downvotes=random.randrange(1000))[0]
+    r = Reply.objects.get_or_create(user_id=user_id, story_id=story_id, parent=parent, text=text, upvotes=random.randrange(1000), downvotes=random.randrange(1000))[0]
     return r
 
 if __name__ == '__main__':
     print 'Populating Ogidni with filthy datas. absolutely filthy stuff'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'colab.settings')
-    from ogidni.models import Genre, UserProfile, User, Story, Replies
+    from ogidni.models import Genre, UserProfile, User, Story, Reply
     populate()

@@ -1,5 +1,5 @@
 from django import forms
-from ogidni.models import Story, UserProfile, Replies
+from ogidni.models import Story, UserProfile, Reply
 from django.contrib.auth.models import User
 
 class StoryForm(forms.ModelForm):

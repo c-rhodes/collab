@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class Genre(models.Model):
     name = models.CharField(max_length=32, unique=True)
+    url = models.TextField()
     
     def __unicode__(self):
         return self.name
@@ -22,11 +23,12 @@ class Story(models.Model):
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
     postdate = models.DateTimeField(auto_now_add=True)
-    
+    url = models.TextField() 
+
     def __unicode__(self):
         return self.name
 
-class Replies(models.Model):
+class Reply(models.Model):
     user = models.ForeignKey(UserProfile)
     story = models.ForeignKey(Story)
     parent = models.IntegerField(default=0)
