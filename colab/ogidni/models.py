@@ -33,6 +33,7 @@ class Replies(models.Model):
     text = models.TextField()
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
+    postdate = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.text
