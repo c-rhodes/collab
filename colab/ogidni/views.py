@@ -201,10 +201,11 @@ def genre(request, genre_name_url):
 
 def story(request, genre_name_url, story_name_url):
     context = RequestContext(request)
+    context_dict = {}
 
     try:
-        genre = Genre.objects.get(url=genre_name_url)
-        story = Story.objects.get(url=story_name_url)
+        genre = Genre.objects.get(url=genre_name_url.lower())
+        story = Story.objects.get(url=story_name_url.lower())
         context_dict = {'story': story}
         story.url = genre.url+'/'+story.url
         replies = sorted(Reply.objects.filter(story=story.id), key=lambda Reply: -confidence(Reply.upvotes, Reply.downvotes))
