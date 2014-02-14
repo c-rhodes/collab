@@ -26,9 +26,9 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li {% block nava_1 %}{% endblock %}><a href="index.html">Home</a></li>
-            <li {% block nava_2 %}{% endblock %}><a href="about.html">About</a></li>
-            <li {% block nava_3 %}{% endblock %}><a href="contact.html">Contact</a></li>
+            {% block nava_1 %}<li>{% endblock %}<a href="index.html">Home</a></li>
+            {% block nava_2 %}<li>{% endblock %}<a href="about.html">About</a></li>
+            {% block nava_3 %}<li>{% endblock %}<a href="contact.html">Contact</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-left">
             {% if user.is_authenticated %}
