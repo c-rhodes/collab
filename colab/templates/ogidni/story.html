@@ -1,25 +1,42 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Ogidni</title>
-	</head>
+{% extends 'ogidni/base.html' %}
 
-	<body>
-		<h1>{{ story_name }}</h1>
+{% block body_block %}
+    {% if story %}
 		<a href="/ogidni/{{ story.url }}/pdf">Generate PDF</a>
-		{% if story %}
-			<p>{{ story.text }}</p><br />
-			{% if replies %}
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		  	<h3 class="panel-title">{{ story_name }} <span class="badge">{{ story.upvotes }} | {{ story.downvotes }}</span></h3>
+		  </div>
+		  <div class="panel-body">
+		    <p>{{ story.text }}<p>
+		    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ reply.user }} on {{ reply.postdate }}</div>
+		  </div>
+		</div>
+
+		{% if replies %}
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+			  	<h3 class="panel-title">Replies</span></h3>
+			  </div>
+			  <div class="panel-body">
 				{% for reply in replies %}
 					<p>{{ reply.text }}</p>
-					posted by {{ reply.user }} on {{ reply.postdate }}
 					<br/>
 				{% endfor %}
-			{% else %}
-				No replies.
-			{% endif %}
+		  	  </div>
+		    </div>
 		{% else %}
-			<strong>Story does not exist.</strong>
+		    <div class="well well-sm" style="margin-bottom: 0px;">There are no replies</div>
 		{% endif %}
-	</body>
-</html>
+
+    {% else %}
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		  	<h3>Sorry!</h3>
+		  </div>
+		  <div class="panel-body">
+		    <p>Looks like there's a problem displaying this story, Please try again later!<p>
+		  </div>
+		</div>
+    {% endif %}
+{% endblock %}

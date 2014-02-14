@@ -14,31 +14,33 @@
 
     <body>
      <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Project name</a>
-      </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          {% block nava_1 %}<li>{% endblock %}<a href="index.html">Home</a></li>
-          {% block nava_2 %}<li>{% endblock %}<a href="about.html">About</a></li>
-          {% block nava_3 %}<li>{% endblock %}<a href="contact.html">Contact</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          {% if user.is_authenticated %}
-              <li><a href="/ogidni/logout/">Logout</a></li>       
-              <li><a href="/ogidni/add_story/">Start story</a></li>
-          {% else %}
-              <li><a href="/ogidni/register/">Register</a></li>
-              <li><a href="/ogidni/login/">Login</a></li>
-          {% endif %}
-        </ul>
-      </div><!-- /.nav-collapse -->
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            {% block nava_1 %}<li>{% endblock %}<a href="index.html">Home</a></li>
+            {% block nava_2 %}<li>{% endblock %}<a href="about.html">About</a></li>
+            {% block nava_3 %}<li>{% endblock %}<a href="contact.html">Contact</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+                <li><a href="/ogidni/logout/">Logout</a></li>       
+                <li><a href="/ogidni/add_story/">Start story</a></li>
+            {% else %}
+                <li><a href="/ogidni/register/">Register</a></li>
+                <li><a href="/ogidni/login/">Login</a></li>
+            {% endif %}
+          </ul>
+        </div><!-- /.nav-collapse -->
+      </div><!-- /.nav-container -->
     </div><!-- /.navbar -->
 
     <div class="container">
