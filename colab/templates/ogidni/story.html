@@ -2,15 +2,19 @@
 {% load static %}
 {% block body_block %}
     {% if story %}
-		<a href="/ogidni/{{ story.url }}/pdf">Generate PDF</a>
+    <button type="button" class="btn btn-success" href="/ogidni/{{ story.url }}/pdf">Generate PDF</button><hr/>
 		<div class="panel panel-default">
 		  <div class="panel-heading">
 		  	<h3 class="panel-title">{{ story_name }} <span class="badge">{{ story.upvotes }} | {{ story.downvotes }}</span></h3>
 		  </div>
-		  <div class="panel-body">
+		  <div class="panel-body" id="s-{{ story.id }}">
 		    <p>{{ story.text }}<p>
 		    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ story.author }} on {{ story.postdate }}
-			    <a class="btn btn-info btn-xs pull-right" href="/ogidni/{{ story.url }}/reply/" role="button">Reply &raquo;</a></div>
+				<div class="pull-right">
+			    	<a class="btn btn-success btn-xs" onclick="replyvote(UP, {{ story.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
+			    	<a class="btn btn-danger btn-xs" onclick="replyvote(DOWN, {{ story.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
+			    	<a class="btn btn-info btn-xs" onclick="replyclick(STORY, {{ reply.id }})" role="button">Reply &raquo;</a>
+			    </div>
 		  </div>
 		</div>
 
@@ -23,7 +27,12 @@
 				{% for reply in replies %}
 					<p>{{ reply.text }}</p>
 					<div class="well well-sm" style="margin-bottom: 0px;">Posted by {{ reply.user }} on {{ reply.postdate }} <span class="badge">{{ reply.upvotes }} | {{ reply.downvotes }}</span>
-			    	<a class="btn btn-info btn-xs pull-right" href="/ogidni/{{ story.url }}/reply/" role="button">Reply &raquo;</a></div>
+						<div class="pull-right" id="r-{{ reply.id }}">
+					    	<a class="btn btn-success btn-xs" onclick="replyvote(UP, {{ reply.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
+					    	<a class="btn btn-danger btn-xs" onclick="replyvote(DOWN, {{ reply.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
+					    	<a class="btn btn-info btn-xs" onclick="replyclick(REPLY, {{ reply.id }})" role="button">Reply &raquo;</a>
+					    </div>
+					</div>
 					<br/>
 				{% endfor %}
 		  	  </div>
