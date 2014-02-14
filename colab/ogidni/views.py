@@ -9,6 +9,7 @@ from ogidni.sorts import confidence, hot
 
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
 
+import json
 from io import BytesIO
 from datetime import datetime
 from reportlab.pdfgen import canvas
@@ -53,20 +54,25 @@ def vote_story(request):
         story_id = request.GET['story_id']
         direction = request.GET['dir']
 
-    votes = 0
+    upvotes = 0
+    downvotes = 0
     if story_id:
         story = Story.objects.get(id=int(story_id))
         if story:
             if direction is 1:
-                votes = story.upvotes + 1
+                upvotes = story.upvotes + 1
                 story.upvotes = votes
+                downvotes = story.downvotes
             else:
                 votes = story.downvotes + 1
                 story.downvotes = votes
+                upvotes = story.upvotes
 
             story.save()
 
-    return HttpResponse(votes)
+    response_data = {'upvotes': upvotes, 'downvotes': downvotes}
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 @login_required
 def vote_reply(request):
