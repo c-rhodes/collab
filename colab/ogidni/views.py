@@ -61,11 +61,11 @@ def vote_story(request):
         if story:
             if direction is 1:
                 upvotes = story.upvotes + 1
-                story.upvotes = votes
+                story.upvotes = upvotes
                 downvotes = story.downvotes
             else:
-                votes = story.downvotes + 1
-                story.downvotes = votes
+                downvotes = story.downvotes + 1
+                story.downvotes = downvotes
                 upvotes = story.upvotes
 
             story.save()
@@ -82,20 +82,24 @@ def vote_reply(request):
         reply_id = request.GET['reply_id']
         direction = request.GET['dir']
 
-    votes = 0
+    upvotes = 0
+    downvotes = 0
     if reply_id:
         reply = Replies.objects.get(id=int(reply_id))
         if reply:
             if direction is 1:
-                votes = reply.upvotes + 1
-                reply.upvotes = votes
+                upvotes = reply.upvotes + 1
+                reply.upvotes = upvotes
+                downvotes = reply.downvotes
             else:
-                votes = reply.downvotes + 1
-                reply.downvotes = votes
+                downvotes = reply.downvotes + 1
+                reply.downvotes = downvotes
+                upvotes = reply.upvotes
 
             reply.save()
 
-    return HttpResponse(votes)
+    response_data = {'upvotes': upvotes, 'downvotes': downvotes}
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 def user_login(request):
