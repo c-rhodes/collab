@@ -11,9 +11,9 @@
 		    <p>{{ story.text }}<p>
 		    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ story.author }} on {{ story.postdate }}
 				<div class="pull-right">
-			    	<a class="btn btn-success btn-xs" onclick="replyvote(UP, {{ story.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
-			    	<a class="btn btn-danger btn-xs" onclick="replyvote(DOWN, {{ story.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
-			    	<a class="btn btn-info btn-xs" onclick="replyclick(STORY, {{ reply.id }})" role="button">Reply &raquo;</a>
+			    	<a class="btn btn-success btn-xs" onclick="replyvote(UP, S, {{ story.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
+			    	<a class="btn btn-danger btn-xs" onclick="replyvote(DOWN, S, {{ story.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
+			    	<a class="btn btn-info btn-xs" onclick="replyclick(STORY, {{ story.id }})" role="button">Reply &raquo;</a>
 			    </div>
 		  </div>
 		</div>
