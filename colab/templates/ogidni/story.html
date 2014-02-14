@@ -9,7 +9,7 @@
 		  </div>
 		  <div class="panel-body">
 		    <p>{{ story.text }}<p>
-		    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ reply.user }} on {{ reply.postdate }}</div>
+		    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ story.author }} on {{ story.postdate }}</div>
 		  </div>
 		</div>
 
@@ -21,12 +21,13 @@
 			  <div class="panel-body">
 				{% for reply in replies %}
 					<p>{{ reply.text }}</p>
+					<div class="well well-sm" style="margin-bottom: 0px;">Posted by {{ reply.user }} on {{ reply.postdate }}</div>
 					<br/>
 				{% endfor %}
 		  	  </div>
 		    </div>
 		{% else %}
-		    <div class="well well-sm" style="margin-bottom: 0px;">There are no replies</div>
+		    <div class="well well-sm" style="margin-bottom: 0px;">No replies.</div>
 		{% endif %}
 
     {% else %}
