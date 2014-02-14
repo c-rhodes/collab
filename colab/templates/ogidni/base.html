@@ -30,7 +30,7 @@
             {% block nava_2 %}<li>{% endblock %}<a href="about.html">About</a></li>
             {% block nava_3 %}<li>{% endblock %}<a href="contact.html">Contact</a></li>
           </ul>
-          <ul class="nav navbar-nav navbar-left">
+          <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
                 <li><a href="/ogidni/logout/">Logout</a></li>       
                 <li><a href="/ogidni/add_story/">Start story</a></li>
