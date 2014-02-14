@@ -2,18 +2,22 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <!-- Bootstrap -->
-	    <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet" media="screen">
-      <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
-      <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap -->
+    <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
-        <title>Ogidni - {% block title %}Collaborative writing{% endblock %}</title>
-    </head>
+    <link href="{% static 'css/display.css' %}" rel="stylesheet">
 
-    <body>
-     <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+    <title>Ogidni - {% block title %}Collaborative writing{% endblock %}</title>
+  </head>
+
+  <body>
+    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -24,7 +28,7 @@
           </button>
           <a class="navbar-brand" href="#">Project name</a>
         </div>
-        <div class="collapse navbar-collapse">
+        <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             {% block nava_1 %}<li>{% endblock %}<a href="index.html">Home</a></li>
             {% block nava_2 %}<li>{% endblock %}<a href="about.html">About</a></li>
@@ -45,12 +49,10 @@
 
     <div class="container">
       {% block body_block %}{% endblock %}
-
       <hr>
       <footer>
         <p>© CollabIt! 2014 All Rights Reserved</p>
       </footer>
-
     </div><!--/.container-->
 
     <!-- Bootstrap core JavaScript
@@ -59,5 +61,5 @@
     <script src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     {% block external_scripts %}{% endblock %}
-    </body>
+  </body>
 </html>
