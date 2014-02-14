@@ -7,7 +7,7 @@
         {% for story in stories %}
 			<div class="panel panel-default">
 			  <div class="panel-heading">
-			  	<h3 class="panel-title"><a href="/ogidni/{{ story.url }}">{{ story.name }}</a><span class="badge">{{ story.upvotes }} | {{ story.downvotes }}</span></h3>
+			  	<h3 class="panel-title"><a href="/ogidni/{{ story.url }}">{{ story.name }}</a> <span class="badge">{{ story.upvotes }} | {{ story.downvotes }}</span></h3>
 			  </div>
 			  <div class="panel-body">
 			    <p>{{ story.text }}<p>
