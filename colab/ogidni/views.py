@@ -9,6 +9,7 @@ from ogidni.sorts import confidence, hot
 
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
 
+from io import BytesIO
 from datetime import datetime
 from reportlab.pdfgen import canvas
 
@@ -43,6 +44,53 @@ def register(request):
     return render_to_response('ogidni/register.html',
             {'user_form': user_form, 'profile_form': profile_form,
                 'registered': registered}, context)
+
+@login_required
+def vote_story(request):
+    context = RequestContext(request)
+    story_id = None
+    if request.method == 'GET':
+        story_id = request.GET['story_id']
+        direction = request.GET['dir']
+
+    votes = 0
+    if story_id:
+        story = Story.objects.get(id=int(story_id))
+        if story:
+            if direction is 1:
+                votes = story.upvotes + 1
+                story.upvotes = votes
+            else:
+                votes = story.downvotes + 1
+                story.downvotes = votes
+
+            story.save()
+
+    return HttpResponse(votes)
+
+@login_required
+def vote_reply(request):
+    context = RequestContext(request)
+    reply_id = None
+    if request.method == 'GET':
+        reply_id = request.GET['reply_id']
+        direction = request.GET['dir']
+
+    votes = 0
+    if reply_id:
+        reply = Replies.objects.get(id=int(reply_id))
+        if reply:
+            if direction is 1:
+                votes = reply.upvotes + 1
+                reply.upvotes = votes
+            else:
+                votes = reply.downvotes + 1
+                reply.downvotes = votes
+
+            reply.save()
+
+    return HttpResponse(votes)
+
 
 def user_login(request):
     context = RequestContext(request)
@@ -172,12 +220,30 @@ def generate_pdf(request, genre_name_url, story_name_url):
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=' + story_name_url + '.pdf'
+
+    buffer = BytesIO()
     
-    p = canvas.Canvas(response)
-    p.drawString(100, 100, "Hello world.")
+    p = canvas.Canvas(buffer)
+
+    try:    
+        story = Story.objects.get(name=story_name)
+        story.url = story_url_encode(genre_name+'/'+story_name)
+    except Story.DoesNotExist:
+        pass
+
+    try:
+        replies = sorted(Replies.objects.filter(story=story.id), key=lambda Replies: -confidence(Replies.upvotes, Replies.downvotes))
+    except Replies.DoesNotExist:
+        pass
+
+    p.drawString(100, 750, story.text)
 
     p.showPage()
     p.save()
+
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
     return response
 
 
