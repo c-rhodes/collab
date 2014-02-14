@@ -19,9 +19,6 @@ function replyvote(DIR_, TYPE_, id) {
 				url: "/ogidni/vote_story",
 				data:"dir="+Number(DIR_)+"&story_id="+id,
 				statusCode: {
-					204: function() {
-						alert("No content");
-					},
 					400: function() {
 						alert("Bad syntax");
 					},
@@ -30,6 +27,10 @@ function replyvote(DIR_, TYPE_, id) {
 					},
 					501: function() {
 						alert("Not implemented");
+					}
+				},
+				success: function(data){
+						updatePost(TYPE.S, id, data);
 					}
 				}
 			});
@@ -40,9 +41,6 @@ function replyvote(DIR_, TYPE_, id) {
 				url: "/ogidni/vote_reply",
 				data:"dir="+Number(DIR_)+"&reply_id="+id,
 				statusCode: {
-					204: function() {
-						alert("No content");
-					},
 					400: function() {
 						alert("Bad syntax");
 					},
@@ -51,6 +49,10 @@ function replyvote(DIR_, TYPE_, id) {
 					},
 					501: function() {
 						alert("Not implemented");
+					}
+				},
+				success: function(data){
+						updatePost(TYPE.R, id, data);
 					}
 				}
 			});

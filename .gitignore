@@ -8,5 +8,4 @@ Thumbs.db
 .swp
 .swo
 *.pyc
-
-colab/ogidni.db
+*.db
