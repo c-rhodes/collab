@@ -5,11 +5,12 @@
 		<a href="/ogidni/{{ story.url }}/pdf">Generate PDF</a>
 		<div class="panel panel-default">
 		  <div class="panel-heading">
-		  	<h3 class="panel-title">{{ story_name }} <span class="badge">{{ story.upvotes }} | {{ story.downvotes }}</span></h3>
+		  	<h3 class="panel-title">{{ story_name }} <span class="badge pull-right">{{ story.upvotes }} | {{ story.downvotes }}</span></h3>
 		  </div>
 		  <div class="panel-body">
 		    <p>{{ story.text }}<p>
-		    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ reply.user }} on {{ reply.postdate }}</div>
+		    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ reply.user }} on {{ reply.postdate }}
+			    <a class="btn btn-info btn-sm pull-right" href="/ogidni/reply/story/{{ story.url }}" role="button">View &raquo;</a></div>
 		  </div>
 		</div>
 
