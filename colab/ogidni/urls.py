@@ -9,4 +9,5 @@ urlpatterns = patterns('',
         url(r'^logout/$', views.user_logout, name='logout'),
         url(r'^(?P<genre_name_url>\w+)/$', views.genre, name='genre'),
         url(r'^(?P<genre_name_url>\w+)/(?P<story_name_url>\w+)/$', views.story, name='story'),
+        url(r'^(?P<genre_name_url>\w+)/(?P<story_name_url>\w+)/pdf/$', views.generate_pdf, name='generate_pdf'),
         )

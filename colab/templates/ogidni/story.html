@@ -6,8 +6,18 @@
 
 	<body>
 		<h1>{{ story_name }}</h1>
+		<a href="/ogidni/{{ story.url }}/pdf">Generate PDF</a>
 		{% if story %}
-			<p>{{ story.text }}</p>
+			<p>{{ story.text }}</p><br />
+			{% if replies %}
+				{% for reply in replies %}
+					<p>{{ reply.text }}</p>
+					posted by {{ reply.user }} on {{ reply.postdate }}
+					<br/>
+				{% endfor %}
+			{% else %}
+				No replies.
+			{% endif %}
 		{% else %}
 			<strong>Story does not exist.</strong>
 		{% endif %}

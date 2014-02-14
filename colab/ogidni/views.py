@@ -4,12 +4,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 
-from ogidni.models import Story, Genre
+from ogidni.models import Story, Genre, Replies
 from ogidni.sorts import confidence, hot
 
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
 
 from datetime import datetime
+from reportlab.pdfgen import canvas
 
 def register(request):
     context = RequestContext(request)
@@ -152,11 +153,33 @@ def story(request, genre_name_url, story_name_url):
 
     try:    
         story = Story.objects.get(name=story_name)
+        story.url = story_url_encode(genre_name+'/'+story_name)
         context_dict['story'] = story
     except Story.DoesNotExist:
         pass
-    
+
+    try:
+        replies = sorted(Replies.objects.filter(story=story.id), key=lambda Replies: -confidence(Replies.upvotes, Replies.downvotes))
+        context_dict['replies'] = replies
+    except Replies.DoesNotExist:
+        pass
+
     return render_to_response('ogidni/story.html', context_dict, context)
+
+def generate_pdf(request, genre_name_url, story_name_url):
+    genre_name = story_url_decode(genre_name_url)
+    story_name = story_url_decode(story_name_url)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=' + story_name_url + '.pdf'
+    
+    p = canvas.Canvas(response)
+    p.drawString(100, 100, "Hello world.")
+
+    p.showPage()
+    p.save()
+    return response
+
 
 def story_url_encode(story_name_url):
     return story_name_url.replace(' ', '_')
