@@ -12,65 +12,42 @@ var TYPE = {
 	R : 2
 }
 function replyvote(DIR_, TYPE_, id) {
-	switch (Number(TYPE_)){
-		case TYPE.S:
-			$.ajax({
-  				dataType: "json",
-				type: "GET",
-				url: "/ogidni/vote_story",
-				data:"dir="+Number(DIR_)+"&story_id="+id,
-				success: function(data){
-						updatePost(TYPE.S, id, data);
-					},
-				statusCode: {
-					400: function() {
-						alert("Bad syntax");
-					},
-					404: function() {
-						alert("Page not found");
-					},
-					501: function() {
-						alert("Not implemented");
-					}
+	$.ajax({
+			dataType: "json",
+		type: "GET",
+		url: "/ogidni/vote",
+		data:"par="+Number(TYPE_)+"&dir="+Number(DIR_)+"&object_id="+id,
+		success: function(data){
+				console.dir(data);
+				if (data['loggedIn']==true){
+					updatePost(TYPE_, id, data);
+				} else {
+					showLogin();
 				}
-			});
-			break;
-		case TYPE.R:
-			$.ajax({
-  				dataType: "json",
-				type: "GET",
-				url: "/ogidni/vote_reply",
-				data:"dir="+Number(DIR_)+"&reply_id="+id,
-				success: function(data){
-						updatePost(TYPE.R, id, data);
-					},
-				statusCode: {
-					400: function() {
-						alert("Bad syntax");
-					},
-					404: function() {
-						alert("Page not found");
-					},
-					501: function() {
-						alert("Not implemented");
-					}
-				}
-			});
-			break;
-		default:
-			alert("Malformed request");
-			break;
-	}
+			},
+		statusCode: {
+			400: function() {
+				alert("E: Bad syntax");
+			},
+			404: function() {
+				alert("E: Page not found");
+			},
+			501: function() {
+				alert("E: Internal server error (object_id probably not found)");
+			}
+		}
+	});
 }
 function updatePost(TYPE_, id, jsonData) {
+	var votes = jsonData['votes'];
 	switch (Number(TYPE_)){
 		case TYPE.S:
 			$("#s-panel").find("#s-"+id).find("h3").find("span")
-				.html(jsonData["upvotes"]+" | "+jsonData["downvotes"]);
+				.html(votes["upvotes"]+" | "+votes["downvotes"]);
 			break;
 		case TYPE.R:
 			$("#r-panel").find("#r-"+id).find(".badge")
-				.html(jsonData["upvotes"]+" | "+jsonData["downvotes"]);
+				.html(votes["upvotes"]+" | "+votes["downvotes"]);
 			break;
 		default:
 			break;
