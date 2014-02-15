@@ -1,0 +1,29 @@
+{% extends 'ogidni/base.html' %}
+
+{% block body_block %}
+    
+    {% if likes %}
+        {% for like in likes %}
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+			  	<h3 class="panel-title"><a href="/ogidni/{{ like.url }}">{{ like.story.name }}</a> <span class="badge">{{ like.story.upvotes }} | {{ like.story.downvotes }}</span></h3>
+			  </div>
+			  <div class="panel-body">
+			    <p>{{ like.story.text }}<p>
+			    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ like.story.author }} on {{ like.story.postdate }}</div>
+			  </div>
+			</div>
+        {% endfor %}
+    {% else %}
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		  	<h3>Sorry!</h3>
+		  </div>
+		  <div class="panel-body">
+		    <p>{{ user.name }} has liked nothing.<p>
+		  </div>
+		</div>
+    {% endif %}
+{% endblock %}
+            
+{% block nava_1 %}<li class="active">{% endblock %}

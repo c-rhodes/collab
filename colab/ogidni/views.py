@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 
-from ogidni.models import Story, Genre, Reply, UserProfile 
+from ogidni.models import Story, Genre, Reply, UserProfile, StoryLike, StoryDislike, ReplyLike, ReplyDislike
 from ogidni.sorts import confidence, hot
 
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
@@ -95,7 +95,7 @@ def vote(request):
 def user_overview(request, username):
     context = RequestContext(request)
 
-    stories = Story.objects.filter(author__user__username=username.capitalize).order_by('-postdate')
+    stories = Story.objects.filter(author__user__username__iexact=username).order_by('-postdate')
 
     for story in stories:
         story.url = story.genre.url + '/' + story.url
@@ -107,7 +107,7 @@ def user_overview(request, username):
 def user_comments(request, username):
     context = RequestContext(request)
     
-    replies = Reply.objects.filter(user__user__username=username.capitalize())
+    replies = Reply.objects.filter(user__user__username__iexact=username).order_by('-postdate')
 
     for reply in replies:
         reply.url = reply.story.genre.url + '/' + reply.story.url
@@ -115,7 +115,30 @@ def user_comments(request, username):
     context_dict = {'replies': replies}
 
     return render_to_response('ogidni/user_comments.html', context_dict, context)
+
+def user_liked(request, username):
+    context = RequestContext(request)
+
+    likes = StoryLike.objects.filter(user__user__username__iexact=username)
     
+    for like in likes:
+        like.url = like.story.genre.url + '/' + like.story.url
+    
+    context_dict = {'likes': likes}
+
+    return render_to_response('ogidni/user_liked.html', context_dict, context)
+    
+def user_disliked(request, username):
+    context = RequestContext(request)
+
+    dislikes = StoryDislike.objects.filter(user__user__username__iexact=username)
+    
+    for dislike in dislikes:
+        dislike.url = dislike.story.genre.url + '/' + dislike.story.url
+    
+    context_dict = {'dislikes': dislikes}
+
+    return render_to_response('ogidni/user_disliked.html', context_dict, context)
     
 def user_login(request):
     context = RequestContext(request)
@@ -198,9 +221,10 @@ def index(request):
 
 def genre(request, genre_name_url):
     context = RequestContext(request)
- 
+    context_dict = {}
+
     try:
-        genre = Genre.objects.get(url=genre_name_url)
+        genre = Genre.objects.get(url__iexact=genre_name_url)
         pages = Story.objects.filter(genre=genre.id)
         context_dict = {'genre': genre}
         context_dict['pages'] = pages
@@ -215,8 +239,8 @@ def story(request, genre_name_url, story_name_url):
     context_dict = {}
 
     try:
-        genre = Genre.objects.get(url=genre_name_url.lower())
-        story = Story.objects.get(url=story_name_url.lower())
+        genre = Genre.objects.get(url__iexact=genre_name_url)
+        story = Story.objects.get(url__iexact=story_name_url)
         context_dict = {'story': story}
         story.url = genre.url+'/'+story.url
         replies = sorted(Reply.objects.filter(story=story.id), key=lambda Reply: -confidence(Reply.upvotes, Reply.downvotes))

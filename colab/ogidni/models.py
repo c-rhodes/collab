@@ -40,3 +40,20 @@ class Reply(models.Model):
     def __unicode__(self):
         return self.text
 
+class StoryLike(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='story_likes')
+    story = models.ForeignKey(Story, related_name='story_likes')
+
+class StoryDislike(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='story_dislikes')
+    story = models.ForeignKey(Story, related_name='story_dislikes')
+
+class ReplyLike(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='reply_likes')
+    reply = models.ForeignKey(Reply, related_name='reply_likes')
+
+class ReplyDislike(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='reply_dislikes')
+    reply = models.ForeignKey(Reply, related_name='reply_dislikes')
+
+
