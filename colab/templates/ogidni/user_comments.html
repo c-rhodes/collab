@@ -1,0 +1,29 @@
+{% extends 'ogidni/base.html' %}
+
+{% block body_block %}
+    
+    {% if replies %}
+        {% for reply in replies %}
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+			  	<h3 class="panel-title"><a href="/ogidni/{{ reply.url }}">{{ reply.story.name }}</a> <span class="badge">{{ reply.upvotes }} | {{ reply.downvotes }}</span></h3>
+			  </div>
+			  <div class="panel-body">
+			    <p>{{ reply.text }}<p>
+			    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ reply.user.user.username }} on {{ reply.postdate }}</div>
+			  </div>
+			</div>
+        {% endfor %}
+    {% else %}
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		  	<h3>Sorry!</h3>
+		  </div>
+		  <div class="panel-body">
+		    <p>There are no posts to show.<p>
+		  </div>
+		</div>
+    {% endif %}
+{% endblock %}
+            
+{% block nava_1 %}<li class="active">{% endblock %}

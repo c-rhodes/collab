@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 
-from ogidni.models import Story, Genre, Reply
+from ogidni.models import Story, Genre, Reply, UserProfile 
 from ogidni.sorts import confidence, hot
 
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
@@ -46,66 +46,77 @@ def register(request):
             {'user_form': user_form, 'profile_form': profile_form,
                 'registered': registered}, context)
 
-@login_required
-def vote_story(request):
+def vote(request):
     context = RequestContext(request)
     story_id = None
+
     if request.method == 'GET':
-        story_id = request.GET['story_id']
-        direction = request.GET['dir']
+        parent = int(request.GET['par'])
+        object_id = int(request.GET['object_id'])
+        direction = int(request.GET['dir'])
+    else:
+        return HttpResponse(status=400)
 
-    upvotes = 0
-    downvotes = 0
-    if story_id:
-        story = Story.objects.get(id=int(story_id))
-        if story:
-            if direction is 1:
-                upvotes = story.upvotes + 1
-                story.upvotes = upvotes
-                downvotes = story.downvotes
-            elif direction is 2:
-                downvotes = story.downvotes + 1
-                story.downvotes = downvotes
-                upvotes = story.upvotes
+    if request.user.is_authenticated():
+        upvotes = 0
+        downvotes = 0
+        if object_id:
+            if parent == 1:
+                reply_object = Story.objects.get(id=int(object_id))
+            elif parent == 2:
+                reply_object = Reply.objects.get(id=int(object_id))
             else:
-                pass
+                return HttpResponse(status=400)
 
-            story.save()
+            if reply_object:
+                if direction is 1:
+                    upvotes = reply_object.upvotes + 1
+                    reply_object.upvotes = upvotes
+                    downvotes = reply_object.downvotes
+                elif direction is 2:
+                    downvotes = reply_object.downvotes + 1
+                    reply_object.downvotes = downvotes
+                    upvotes = reply_object.upvotes
+                else:
+                    return HttpResponse(status=400)
 
-    response_data = {'upvotes': upvotes, 'downvotes': downvotes}
+                reply_object.save()
 
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+                response_data = {'loggedIn':True, 'votes':{'upvotes': upvotes, 'downvotes': downvotes}}
+                return HttpResponse(json.dumps(response_data), content_type="application/json")
+            else:
+                return HttpResponse(status=500)
+        else:
+            return HttpResponse(status=500)
+    else:
+        response_data = {'loggedIn':False, 'votes':{'upvotes': 0, 'downvotes': 0}}
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-@login_required
-def vote_reply(request):
+def user_overview(request, username):
     context = RequestContext(request)
-    reply_id = None
-    if request.method == 'GET':
-        reply_id = request.GET['reply_id']
-        direction = request.GET['dir']
 
-    upvotes = 0
-    downvotes = 0
-    if reply_id:
-        reply = Reply.objects.get(id=int(reply_id))
-        if reply:
-            if direction is 1:
-                upvotes = reply.upvotes + 1
-                reply.upvotes = upvotes
-                downvotes = reply.downvotes
-            elif direction is 2:
-                downvotes = reply.downvotes + 1
-                reply.downvotes = downvotes
-                upvotes = reply.upvotes
-            else:
-                pass
+    stories = Story.objects.filter(author__user__username=username.capitalize).order_by('-postdate')
 
-            reply.save()
+    for story in stories:
+        story.url = story.genre.url + '/' + story.url
 
-    response_data = {'upvotes': upvotes, 'downvotes': downvotes}
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+    context_dict = {'stories': stories}
 
+    return render_to_response('ogidni/user_overview.html', context_dict, context)
 
+def user_comments(request, username):
+    context = RequestContext(request)
+    
+    replies = Reply.objects.filter(user__user__username=username.capitalize())
+
+    for reply in replies:
+        reply.url = reply.story.genre.url + '/' + reply.story.url
+
+    context_dict = {'replies': replies}
+
+    return render_to_response('ogidni/user_comments.html', context_dict, context)
+    
+    
 def user_login(request):
     context = RequestContext(request)
 

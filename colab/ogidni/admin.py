@@ -13,7 +13,7 @@ class ReplyAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'story', 'parent', 'text', 'upvotes', \
             'downvotes')
 
-UserAdmin.list_display = ('email', 'first_name', 'last_name', 'password', 'is_active', 'date_joined', 'is_staff')
+UserAdmin.list_display = ('username', 'email', 'first_name', 'last_name', 'password', 'is_active', 'date_joined', 'is_staff')
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
