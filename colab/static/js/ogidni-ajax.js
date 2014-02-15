@@ -55,3 +55,6 @@ function updatePost(TYPE_, id, jsonData) {
 function showLogin() {
     $("#loginModal").modal('show')
 }
+function userLogin() {
+    window.location.replace("/ogidni/login");
+}
