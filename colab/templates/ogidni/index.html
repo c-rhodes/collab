@@ -1,30 +1,46 @@
 {% extends 'ogidni/base.html' %}
+{% load static %}
+
+{% block external_css %}
+    <link href="{% static 'css/bootstrap-wysihtml5.css' %}" rel="stylesheet">
+    <link href="{% static 'css/reply.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block body_block %}
     <h1>Collaborative Writing</h1>
-    
+
     {% if stories %}
         {% for story in stories %}
-			<div class="panel panel-default">
-			  <div class="panel-heading">
-			  	<h3 class="panel-title"><a href="/ogidni/{{ story.url }}">{{ story.name }}</a> <span class="badge">{{ story.upvotes }} | {{ story.downvotes }}</span></h3>
-			  </div>
-			  <div class="panel-body">
-			    <p>{{ story.text }}<p>
-			    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ story.author }} on {{ story.postdate }}</div>
-			  </div>
-			</div>
+            <div class="panel panel-default s-panel">
+                <div class="panel-heading" id="s-{{ story.id }}">
+                    <h3 class="panel-title"><a href="/ogidni/{{ story.url }}">{{ story.name }}</a> <span class="badge">{{ story.upvotes }} | {{ story.downvotes }}</span></h3>
+                </div>
+                <div class="panel-body">
+                    <p>{{ story.text }}<p>
+                    <div class="well well-sm" style="margin-bottom: 0px;">Submitted by {{ story.author }} on {{ story.postdate }}
+                        <div class="pull-right">
+                            <a class="btn btn-success btn-xs" onclick="replyvote(DIR.UP, TYPE.S, {{ story.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
+                            <a class="btn btn-danger btn-xs" onclick="replyvote(DIR.DOWN, TYPE.S, {{ story.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
+                            <a class="btn btn-info btn-xs" onclick="showStory('{{ story.url }}')" role="button">View &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
     {% else %}
-		<div class="panel panel-default">
-		  <div class="panel-heading">
-		  	<h3>Sorry!</h3>
-		  </div>
-		  <div class="panel-body">
-		    <p>There are no posts to show.<p>
-		  </div>
-		</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Sorry!</h3>
+            </div>
+            <div class="panel-body">
+                <p>There are no posts to show.<p>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
-            
+
+{% block external_scripts %}
+    <script src="{% static 'js/vote-ajax.js' %}"></script>
+{% endblock %}
+    
 {% block nava_1 %}<li class="active">{% endblock %}

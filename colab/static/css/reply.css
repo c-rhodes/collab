@@ -1,0 +1,10 @@
+#replyBox {
+	position: absolute;
+	float: left;
+	padding: 0;
+	width: 650px;
+}
+#replyBoxTextArea {
+	padding: 0;
+	border: 0;
+}

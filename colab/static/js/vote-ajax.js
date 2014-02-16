@@ -1,16 +1,13 @@
-$(document).ready(function() {
-
-});
 var DIR = {
     DEFAULT : 0,
     UP : 1,
     DOWN : 2
-}
+};
 var TYPE = {
     DEFAULT : 0,
     S : 1,
     R : 2
-}
+};
 function replyvote(DIR_, TYPE_, id) {
     $.ajax({
             dataType: "json",
@@ -41,7 +38,7 @@ function updatePost(TYPE_, id, jsonData) {
     var votes = jsonData['votes'];
     switch (Number(TYPE_)){
         case TYPE.S:
-            $("#s-panel").find("#s-"+id).find("h3").find("span")
+            $(".s-panel").find("#s-"+id).find("h3").find("span")
                 .html(votes["upvotes"]+" | "+votes["downvotes"]);
             break;
         case TYPE.R:
@@ -54,6 +51,9 @@ function updatePost(TYPE_, id, jsonData) {
 }
 function showLogin() {
     $("#loginModal").modal('show')
+}
+function showStory(sURL) {
+    window.location.replace("/ogidni/"+sURL);
 }
 function userLogin() {
     window.location.replace("/ogidni/login");
