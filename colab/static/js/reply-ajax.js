@@ -18,8 +18,49 @@ $(document).ready(function() {
     $("#closeReply").click(function(){
         $("#replyBox").fadeOut();
     });
-    $("#submitReply").button();
-    $("#replyBoxTextArea").wysihtml5();
+    $("#submitReply").click(function(){
+        if (currentReplyID == {} || 
+            currentReplyID['sid'] == null || currentReplyID['rid'] == null) {
+            alert("Please click reply on an item before submitting a reply.");
+            return;
+        }
+        var encodeHTML = encodeURIComponent($(".textarea").val());
+        $.ajax({
+            dataType: "json",
+            type: "post",
+            url: "/ogidni/reply",
+            data:"story_id="+sid+"&reply_id="+rid+"&editor_data="+encodeHTML,
+            success: function(data){
+                    if (data['loggedIn']){
+                        if (data['posted']){
+                            location.reload(true);
+                        else {
+                            alert("Something went wrong, please try again!");
+                        }
+                    } else {
+                        showLogin();
+                    }
+                },
+            statusCode: {
+                400: function() {
+                    alert("E: Bad syntax");
+                },
+                404: function() {
+                    alert("E: Page not found");
+                },
+                501: function() {
+                    alert("E: Internal server error (recipient_id probably not found)");
+                }
+            }
+        });
+        var reset = $("#replyBox").css("border");
+        $("#replyBox").css("border: 1px solid green");
+        $("#replyBox").fadeOut({complete:function(){
+            $("#replyBox").css("border", reset);
+        }});
+    });
+    $("#replyBox").hide();
+    //$("#replyBoxTextArea").wysihtml5();
     /*{
             "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
             "emphasis": true, //Italics, bold, etc. Default true
@@ -30,13 +71,12 @@ $(document).ready(function() {
             "color": true //Button to change color of font  
         }
     */
-    //$("#replyBox").hide();
 });
 $(document).mousemove(function(e){
     mousePos = {top:e.pageY, left:e.pageX};
 });
-function replyclick(TYPE_, id) {
-    currentReplyID = {type:TYPE_, id:id};
+function replyclick(s_id ,r_id) {
+    currentReplyID = {sid:s_id, rid:r_id};
     console.log(currentReplyID);
     var compT = mousePos.top;
     var compL = mousePos.left-$("#replyBox").width();

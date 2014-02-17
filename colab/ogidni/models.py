@@ -30,8 +30,13 @@ class Story(models.Model):
 
 class Reply(models.Model):
     user = models.ForeignKey(UserProfile)
+<<<<<<< HEAD
     story = models.ForeignKey(Story, null=False)
     parent = models.ForeignKey('self', null=True, blank=True, default=None)
+=======
+    story = models.ForeignKey(Story)
+    preply = models.ForeignKey('self', null=True, default=None)
+>>>>>>> eabfc01fdb556415ada9c03b731d44cde62323da
     text = models.TextField()
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
@@ -40,6 +45,7 @@ class Reply(models.Model):
     def __unicode__(self):
         return self.text
 
+<<<<<<< HEAD
 class Vote(models.Model):
     user = models.ForeignKey(UserProfile, related_name='votes')
     story = models.ForeignKey(Story, related_name='votes', null=True, blank=True, default = None)
@@ -47,3 +53,20 @@ class Vote(models.Model):
     direction = models.NullBooleanField(default=None)
 
 
+=======
+class StoryLike(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='story_likes')
+    story = models.ForeignKey(Story, related_name='story_likes')
+
+class StoryDislike(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='story_dislikes')
+    story = models.ForeignKey(Story, related_name='story_dislikes')
+
+class ReplyLike(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='reply_likes')
+    reply = models.ForeignKey(Reply, related_name='reply_likes')
+
+class ReplyDislike(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='reply_dislikes')
+    reply = models.ForeignKey(Reply, related_name='reply_dislikes')
+>>>>>>> eabfc01fdb556415ada9c03b731d44cde62323da

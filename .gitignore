@@ -8,3 +8,6 @@ Thumbs.db
 .swp
 .swo
 *.pyc
+colab/ogidni.db
+
+.DS_Store

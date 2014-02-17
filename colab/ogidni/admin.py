@@ -10,7 +10,7 @@ class StoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'text', 'genre', 'author', 'url', 'upvotes', 'downvotes', 'postdate')
 
 class ReplyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'story', 'parent', 'text', 'upvotes', \
+    list_display = ('id', 'user', 'story', 'preply', 'text', 'upvotes', \
             'downvotes')
 
 class VoteAdmin(admin.ModelAdmin):

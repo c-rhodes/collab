@@ -19,7 +19,7 @@
                     <div class="pull-right">
                         <a class="btn btn-success btn-xs" onclick="replyvote(DIR.UP, TYPE.S, {{ story.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
                         <a class="btn btn-danger btn-xs" onclick="replyvote(DIR.DOWN, TYPE.S, {{ story.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
-                        <a class="btn btn-info btn-xs" onclick="replyclick(TYPE.S, {{ story.id }})" role="button">Reply &raquo;</a>
+                        <a class="btn btn-info btn-xs" onclick="replyclick({{ story.id }}, 0)" role="button">Reply &raquo;</a>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         <div class="pull-right">
                             <a class="btn btn-success btn-xs" onclick="replyvote(DIR.UP, TYPE.R, {{ reply.id }})" role="button">Up <span class="glyphicon glyphicon-chevron-up"></span></a> 
                             <a class="btn btn-danger btn-xs" onclick="replyvote(DIR.DOWN, TYPE.R, {{ reply.id }})" role="button">Down <span class="glyphicon glyphicon-chevron-down"></span></a> 
-                            <a class="btn btn-info btn-xs" onclick="replyclick(TYPE.R, {{ reply.id }})" role="button">Reply &raquo;</a>
+                            <a class="btn btn-info btn-xs" onclick="replyclick({{ story.id }}, {{ reply.id }})" role="button">Reply &raquo;</a>
                         </div>
                     </div>
                     <br/>
