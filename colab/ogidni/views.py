@@ -3,10 +3,10 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core import serializers
 
 from ogidni.models import Story, Genre, Reply, UserProfile, StoryLike, StoryDislike, ReplyLike, ReplyDislike
 from ogidni.sorts import confidence, hot
-
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
 
 import json
@@ -48,7 +48,6 @@ def register(request):
 
 def vote(request):
     context = RequestContext(request)
-    story_id = None
 
     if request.method == 'GET':
         parent = int(request.GET['par'])
@@ -91,6 +90,39 @@ def vote(request):
     else:
         response_data = {'loggedIn':False, 'votes':{'upvotes': 0, 'downvotes': 0}}
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def reply(request):
+    context = RequestContext(request)
+
+    if request.method == 'POST':
+        story_id = int(request.POST['story_id'])
+        reply_id = int(request.POST['reply_id'])
+        editor_data = request.POST['editor_data']
+    else:
+        return HttpResponse(status=400)
+
+    if request.user.is_authenticated():
+        if story_id && reply_id:
+            posted = false
+            story_object = Story.objects.get(id=int(story_id))
+            if reply_id != 0:
+                reply_object = Reply.objects.get(id=int(reply_id))
+            else:
+                reply_object = None
+
+            text_data = urllib.unquote(str(editor_data)).decode("utf-8")
+            new_reply = Reply(user=request.user, story=story_object, reply=reply_object, text=editor_data)
+            new_reply.save()
+
+            reply_json = serializers.serialize("json", Reply.objects.get(new_reply))
+            response_data = {'loggedIn':True, 'posted':True, 'new_object':reply_json}
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+        else:
+            return HttpResponse(status=400)
+    else:
+        response_data = {'loggedIn':False, 'posted':False}
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
 def user_overview(request, username):
     context = RequestContext(request)

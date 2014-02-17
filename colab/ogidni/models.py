@@ -31,7 +31,7 @@ class Story(models.Model):
 class Reply(models.Model):
     user = models.ForeignKey(UserProfile)
     story = models.ForeignKey(Story)
-    parent = models.IntegerField(default=0)
+    preply = models.ForeignKey('self', null=True, default=None)
     text = models.TextField()
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
@@ -55,5 +55,3 @@ class ReplyLike(models.Model):
 class ReplyDislike(models.Model):
     user = models.ForeignKey(UserProfile, related_name='reply_dislikes')
     reply = models.ForeignKey(Reply, related_name='reply_dislikes')
-
-
