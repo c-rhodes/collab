@@ -10,6 +10,7 @@ from ogidni.sorts import confidence, hot
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
 
 import json
+import urllib
 from io import BytesIO
 from datetime import datetime
 from reportlab.pdfgen import canvas
@@ -94,16 +95,16 @@ def vote(request):
 def reply(request):
     context = RequestContext(request)
 
-    if request.method == 'POST':
-        story_id = int(request.POST['story_id'])
-        reply_id = int(request.POST['reply_id'])
-        editor_data = request.POST['editor_data']
+    if request.method == 'GET':
+        story_id = int(request.GET['story_id'])
+        reply_id = int(request.GET['reply_id'])
+        editor_data = request.GET['editor_data']
     else:
         return HttpResponse(status=400)
 
     if request.user.is_authenticated():
-        if story_id && reply_id:
-            posted = false
+        if story_id and reply_id is not None:
+            req_user = UserProfile.objects.get(request.user)
             story_object = Story.objects.get(id=int(story_id))
             if reply_id != 0:
                 reply_object = Reply.objects.get(id=int(reply_id))
@@ -111,7 +112,7 @@ def reply(request):
                 reply_object = None
 
             text_data = urllib.unquote(str(editor_data)).decode("utf-8")
-            new_reply = Reply(user=request.user, story=story_object, reply=reply_object, text=editor_data)
+            new_reply = Reply(user=req_user, story=story_object, preply=reply_object, text=editor_data)
             new_reply.save()
 
             reply_json = serializers.serialize("json", Reply.objects.get(new_reply))

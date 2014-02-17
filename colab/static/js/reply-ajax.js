@@ -27,14 +27,15 @@ $(document).ready(function() {
         var encodeHTML = encodeURIComponent($(".textarea").val());
         $.ajax({
             dataType: "json",
-            type: "post",
+            type: "get",
             url: "/ogidni/reply",
-            data:"story_id="+sid+"&reply_id="+rid+"&editor_data="+encodeHTML,
+            data:"story_id="+currentReplyID['sid']+"&reply_id="+currentReplyID['rid']+
+                "&editor_data="+encodeHTML,
             success: function(data){
                     if (data['loggedIn']){
                         if (data['posted']){
                             location.reload(true);
-                        else {
+                        } else {
                             alert("Something went wrong, please try again!");
                         }
                     } else {
@@ -47,9 +48,6 @@ $(document).ready(function() {
                 },
                 404: function() {
                     alert("E: Page not found");
-                },
-                501: function() {
-                    alert("E: Internal server error (recipient_id probably not found)");
                 }
             }
         });
