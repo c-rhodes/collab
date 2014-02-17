@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 
-from ogidni.models import Story, Genre, Reply, UserProfile, StoryLike, StoryDislike, ReplyLike, ReplyDislike
+from ogidni.models import Story, Genre, Reply, UserProfile, Vote
 from ogidni.sorts import confidence, hot
 
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
@@ -119,8 +119,8 @@ def user_comments(request, username):
 def user_liked(request, username):
     context = RequestContext(request)
 
-    likes = StoryLike.objects.filter(user__user__username__iexact=username)
-    
+    likes = Vote.objects.filter(user__user__username__iexact=username, reply=None, direction=True)
+
     for like in likes:
         like.url = like.story.genre.url + '/' + like.story.url
     
@@ -131,8 +131,8 @@ def user_liked(request, username):
 def user_disliked(request, username):
     context = RequestContext(request)
 
-    dislikes = StoryDislike.objects.filter(user__user__username__iexact=username)
-    
+    dislikes = Vote.objects.filter(user__user__username__iexact=username, reply=None, direction=False)
+
     for dislike in dislikes:
         dislike.url = dislike.story.genre.url + '/' + dislike.story.url
     
@@ -192,7 +192,7 @@ def add_story(request):
 def index(request):
     context = RequestContext(request)
 
-    stories = sorted(Story.objects.all(), key=lambda Story: -hot(Story.upvotes, Story.downvotes, datetime.now()))
+    stories = sorted(Story.objects.all(), key=lambda Story: -hot(Story.upvotes, Story.downvotes, datetime.now()))[:20] # limit by 20
 
     try:
         for story in stories:

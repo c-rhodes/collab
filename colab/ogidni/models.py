@@ -22,7 +22,7 @@ class Story(models.Model):
     author = models.ForeignKey(UserProfile,  on_delete=models.DO_NOTHING)
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
-    postdate = models.DateTimeField(auto_now_add=True)
+    postdate = models.DateTimeField()
     url = models.TextField() 
 
     def __unicode__(self):
@@ -30,30 +30,20 @@ class Story(models.Model):
 
 class Reply(models.Model):
     user = models.ForeignKey(UserProfile)
-    story = models.ForeignKey(Story)
-    parent = models.IntegerField(default=0)
+    story = models.ForeignKey(Story, null=False)
+    parent = models.ForeignKey('self', null=True, blank=True, default=None)
     text = models.TextField()
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
-    postdate = models.DateTimeField(auto_now_add=True)
+    postdate = models.DateTimeField()
 
     def __unicode__(self):
         return self.text
 
-class StoryLike(models.Model):
-    user = models.ForeignKey(UserProfile, related_name='story_likes')
-    story = models.ForeignKey(Story, related_name='story_likes')
-
-class StoryDislike(models.Model):
-    user = models.ForeignKey(UserProfile, related_name='story_dislikes')
-    story = models.ForeignKey(Story, related_name='story_dislikes')
-
-class ReplyLike(models.Model):
-    user = models.ForeignKey(UserProfile, related_name='reply_likes')
-    reply = models.ForeignKey(Reply, related_name='reply_likes')
-
-class ReplyDislike(models.Model):
-    user = models.ForeignKey(UserProfile, related_name='reply_dislikes')
-    reply = models.ForeignKey(Reply, related_name='reply_dislikes')
+class Vote(models.Model):
+    user = models.ForeignKey(UserProfile, related_name='votes')
+    story = models.ForeignKey(Story, related_name='votes', null=True, blank=True, default = None)
+    reply = models.ForeignKey(Reply, related_name='votes', null=True, blank=True, default = None)
+    direction = models.NullBooleanField(default=None)
 
 

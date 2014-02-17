@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from ogidni.models import Story, UserProfile, Genre, Reply, StoryLike, StoryDislike, ReplyLike, ReplyDislike
+from ogidni.models import Story, UserProfile, Genre, Reply, Vote
 
 class GenreAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'url')
@@ -13,17 +13,8 @@ class ReplyAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'story', 'parent', 'text', 'upvotes', \
             'downvotes')
 
-class StoryLikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'story')
-
-class StoryDislikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'story')
-
-class ReplyLikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'reply')
-
-class ReplyDislikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'reply')
+class VoteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'story', 'reply', 'direction')
 
 UserAdmin.list_display = ('username', 'email', 'first_name', 'last_name', 'password', 'is_active', 'date_joined', 'is_staff')
 
@@ -32,8 +23,5 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(Story, StoryAdmin)
 admin.site.register(Reply, ReplyAdmin)
-admin.site.register(StoryLike, StoryLikeAdmin)
-admin.site.register(StoryDislike, StoryDislikeAdmin)
-admin.site.register(ReplyLike, ReplyLikeAdmin)
-admin.site.register(ReplyDislike, ReplyDislikeAdmin)
+admin.site.register(Vote, VoteAdmin)
 
