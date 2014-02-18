@@ -2,18 +2,19 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core import serializers
 
-from ogidni.models import Story, Genre, Reply, UserProfile, Vote
+from ogidni.models import Story, Genre, Reply, User, UserProfile, Vote
 from ogidni.sorts import confidence, hot
 from ogidni.forms import StoryForm, UserForm, UserProfileForm
 
-import json
-import urllib
 from io import BytesIO
 from datetime import datetime
 from reportlab.pdfgen import canvas
+
+import json
+import urllib
 
 def register(request):
     context = RequestContext(request)
@@ -61,9 +62,9 @@ def vote(request):
         upvotes = 0
         downvotes = 0
         if object_id:
-            if parent == 1:
+            if parent is 1:
                 reply_object = Story.objects.get(id=int(object_id))
-            elif parent == 2:
+            elif parent is 2:
                 reply_object = Reply.objects.get(id=int(object_id))
             else:
                 return HttpResponse(status=400)
@@ -106,13 +107,13 @@ def reply(request):
         if story_id and reply_id is not None:
             req_user = UserProfile.objects.get(request.user)
             story_object = Story.objects.get(id=int(story_id))
-            if reply_id != 0:
+            if reply_id is not 0:
                 reply_object = Reply.objects.get(id=int(reply_id))
             else:
                 reply_object = None
 
             text_data = urllib.unquote(str(editor_data)).decode("utf-8")
-            new_reply = Reply(user=req_user, story=story_object, preply=reply_object, text=editor_data)
+            new_reply = Reply(user=req_user, story=story_object, parent=reply_object, text=editor_data)
             new_reply.save()
 
             reply_json = serializers.serialize("json", Reply.objects.get(new_reply))
@@ -128,8 +129,9 @@ def reply(request):
 def user_overview(request, username):
     context = RequestContext(request)
 
-    stories = Story.objects.filter(author__user__username__iexact=username).order_by('-postdate')
+    user_exists(username)
 
+    stories = Story.objects.filter(author__user__username__iexact=username).order_by('-postdate')
     for story in stories:
         story.url = story.genre.url + '/' + story.url
 
@@ -140,8 +142,9 @@ def user_overview(request, username):
 def user_comments(request, username):
     context = RequestContext(request)
     
-    replies = Reply.objects.filter(user__user__username__iexact=username).order_by('-postdate')
+    user_exists(username)
 
+    replies = Reply.objects.filter(user__user__username__iexact=username).order_by('-postdate')
     for reply in replies:
         reply.url = reply.story.genre.url + '/' + reply.story.url
 
@@ -152,8 +155,9 @@ def user_comments(request, username):
 def user_liked(request, username):
     context = RequestContext(request)
 
-    likes = Vote.objects.filter(user__user__username__iexact=username, reply=None, direction=True)
+    user_exists(username)
 
+    likes = Vote.objects.filter(user__user__username__iexact=username, reply=None, direction=True)
     for like in likes:
         like.url = like.story.genre.url + '/' + like.story.url
     
@@ -163,6 +167,8 @@ def user_liked(request, username):
     
 def user_disliked(request, username):
     context = RequestContext(request)
+    
+    user_exists(username)
 
     dislikes = Vote.objects.filter(user__user__username__iexact=username, reply=None, direction=False)
 
@@ -172,6 +178,13 @@ def user_disliked(request, username):
     context_dict = {'dislikes': dislikes}
 
     return render_to_response('ogidni/user_disliked.html', context_dict, context)
+
+def user_exists(username):
+    """ Determines is user exists, raising 404 error if not. """
+    try:
+        User.objects.get(username__iexact=username)
+    except User.DoesNotExist:
+        raise Http404
     
 def user_login(request):
     context = RequestContext(request)
@@ -262,7 +275,7 @@ def genre(request, genre_name_url):
         context_dict = {'genre': genre}
         context_dict['pages'] = pages
     except (Genre.DoesNotExist, Story.DoesNotExist) as e:
-        pass
+        raise Http404
 
 
     return render_to_response('ogidni/genre.html', context_dict, context)
@@ -279,7 +292,7 @@ def story(request, genre_name_url, story_name_url):
         replies = sorted(Reply.objects.filter(story=story.id), key=lambda Reply: -confidence(Reply.upvotes, Reply.downvotes))
         context_dict['replies'] = replies
     except (Genre.DoesNotExist, Story.DoesNotExist, Reply.DoesNotExist) as e:
-        pass
+        raise Http404
 
     return render_to_response('ogidni/story.html', context_dict, context)
 
