@@ -100,7 +100,7 @@ def reply(request):
 
     if request.user.is_authenticated():
         if story_id and reply_id is not None:
-            req_user = User.objects.get(request.user)
+            req_user = User.objects.get(username=request.user)
             story_object = Story.objects.get(id=int(story_id))
             if reply_id is not 0:
                 reply_object = Reply.objects.get(id=int(reply_id))
@@ -109,10 +109,10 @@ def reply(request):
 
             text_data = urllib.unquote(str(editor_data)).decode("utf-8")
             new_reply = Reply(user=req_user, story=story_object,
-                              parent=reply_object, text=text_data)
+                              parent=reply_object, text=text_data, postdate=datetime.now())
             new_reply.save()
 
-            reply_json = serializers.serialize("json", Reply.objects.get(new_reply))
+            reply_json = serializers.serialize("json", new_reply)
             response_data = {'loggedIn': True, 'posted': True, 'new_object': reply_json}
             return HttpResponse(json.dumps(response_data), content_type="application/json")
         else:
