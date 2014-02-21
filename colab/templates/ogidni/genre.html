@@ -8,8 +8,6 @@
 		{% if pages %}
 			{% for page in pages %}
 				<a href="{{ page.url }}">{{ page.name }}</a><br />
-				{% endfor %}
-		{% else %}
-			<strong>No stories currently in this genre.</strong>
+			{% endfor %}
 		{% endif %}
 {% endblock %}

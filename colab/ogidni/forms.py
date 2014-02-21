@@ -1,5 +1,5 @@
 from django import forms
-from ogidni.models import Story, UserProfile, Reply
+from ogidni.models import Story
 from django.contrib.auth.models import User
 
 class StoryForm(forms.ModelForm):
@@ -14,8 +14,3 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
-
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = ('picture', )

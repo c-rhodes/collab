@@ -1,82 +1,89 @@
 .
-├── colab
-│   ├── __init__.py
-│   ├── __init__.pyc
-│   ├── settings.py
-│   ├── settings.pyc
-│   ├── urls.py
-│   ├── urls.pyc
-│   ├── wsgi.py
-│   └── wsgi.pyc
-├── colab_tree
-├── manage.py
-├── media
-├── ogidni
-│   ├── admin.py
-│   ├── admin.pyc
-│   ├── forms.py
-│   ├── forms.pyc
-│   ├── __init__.py
-│   ├── __init__.pyc
-│   ├── models.py
-│   ├── models.pyc
-│   ├── sorts.py
-│   ├── sorts.pyc
-│   ├── tests.py
-│   ├── urls.py
-│   ├── urls.pyc
-│   ├── views.py
-│   └── views.pyc
-├── ogidni.db
-├── populate_ogidni.py
-├── profile_images
-│   └── 001_-_FCUiRTM.jpg
-├── static
-│   ├── css
-│   │   ├── bootstrap.css
-│   │   ├── bootstrap.css.map
-│   │   ├── bootstrap.min.css
-│   │   ├── bootstrap-responsive.css
-│   │   ├── bootstrap-theme.css
-│   │   ├── bootstrap-theme.css.map
-│   │   ├── bootstrap-theme.min.css
-│   │   └── display.css
-│   ├── fonts
-│   │   ├── glyphicons-halflings-regular.eot
-│   │   ├── glyphicons-halflings-regular.svg
-│   │   ├── glyphicons-halflings-regular.ttf
-│   │   └── glyphicons-halflings-regular.woff
-│   └── js
-│       ├── bootstrap.js
-│       ├── bootstrap.min.js
-│       ├── jquery-2.1.0.min.js
-│       └── ogidni-ajax.js
-├── stories
-│   ├── Animal Farm
-│   ├── Anthem
-│   ├── Brave New World
-│   ├── Down and Out in Paris and London
-│   ├── Fear and Loathing in Las Vegas
-│   ├── Flowers for Algernon
-│   ├── Infinite Jest
-│   ├── iRobot
-│   ├── Money
-│   ├── Neuromancer
-│   ├── On the Road
-│   ├── Snow Crash
-│   ├── The Adventures of Huckleberry Finn
-│   ├── The Catcher in the Rye
-│   ├── The Hitchhikers Guide to the Galaxy
-│   ├── The Hobbit
-│   └── The Rum Diary
-└── templates
-    └── ogidni
-        ├── add_story.html
-        ├── base.html
-        ├── genre.html
-        ├── index.html
-        ├── login.html
-        ├── register.html
-        └── story.html
+|-- colab
+|   |-- __init__.py
+|   |-- __init__.pyc
+|   |-- settings.py
+|   |-- settings.pyc
+|   |-- urls.py
+|   |-- urls.pyc
+|   |-- wsgi.py
+|   `-- wsgi.pyc
+|-- colab_tree
+|-- manage.py
+|-- ogidni
+|   |-- admin.py
+|   |-- admin.pyc
+|   |-- forms.py
+|   |-- forms.pyc
+|   |-- __init__.py
+|   |-- __init__.pyc
+|   |-- models.py
+|   |-- models.pyc
+|   |-- send.py
+|   |-- sorts.py
+|   |-- sorts.pyc
+|   |-- tests.py
+|   |-- urls.py
+|   |-- urls.pyc
+|   |-- views.py
+|   `-- views.pyc
+|-- ogidni.db
+|-- population
+|   |-- adjectives
+|   |-- genres
+|   |-- nouns
+|   |-- populate_genres.py
+|   |-- populate_replies.py
+|   |-- populate_stories.py
+|   |-- populate_users.py
+|   |-- populate_votes.py
+|   |-- random_paragraph.py
+|   |-- random_paragraph.pyc
+|   |-- random_titles.py
+|   |-- random_titles.pyc
+|   `-- usernames
+|-- requirements.txt
+|-- static
+|   |-- css
+|   |   |-- blog.css
+|   |   |-- bootstrap.css
+|   |   |-- bootstrap.css.map
+|   |   |-- bootstrap.min.css
+|   |   |-- bootstrap-responsive.css
+|   |   |-- bootstrap-theme.css
+|   |   |-- bootstrap-theme.css.map
+|   |   |-- bootstrap-theme.min.css
+|   |   |-- bootstrap-wysihtml5.css
+|   |   |-- display.css
+|   |   |-- reply.css
+|   |   `-- wysiwyg-colour.css
+|   |-- fonts
+|   |   |-- glyphicons-halflings-regular.eot
+|   |   |-- glyphicons-halflings-regular.svg
+|   |   |-- glyphicons-halflings-regular.ttf
+|   |   `-- glyphicons-halflings-regular.woff
+|   |-- img
+|   |   `-- glyphicons-halflings.png
+|   `-- js
+|       |-- bootstrap.js
+|       |-- bootstrap.min.js
+|       |-- bootstrap-wysihtml5.js
+|       |-- jquery-2.1.0.min.js
+|       |-- reply-ajax.js
+|       |-- vote-ajax.js
+|       `-- wysihtml5.js
+`-- templates
+    `-- ogidni
+        |-- add_story.html
+        |-- base.html
+        |-- genre.html
+        |-- index.html
+        |-- login.html
+        |-- register.html
+        |-- story.html
+        |-- user_comments.html
+        |-- user_disliked.html
+        |-- user_liked.html
+        `-- user_overview.html
 
-11 directories, 68 files
+10 directories, 76 files
