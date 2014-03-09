@@ -1,7 +1,7 @@
 var DIR = {
-    DEFAULT : 0,
+    DEFAULT : 2,
     UP : 1,
-    DOWN : 2
+    DOWN : 0
 };
 var TYPE = {
     DEFAULT : 0,
@@ -10,7 +10,7 @@ var TYPE = {
 };
 function replyvote(DIR_, TYPE_, id) {
     $.ajax({
-            dataType: "json",
+        dataType: "json",
         type: "GET",
         url: "/ogidni/vote",
         data:"par="+Number(TYPE_)+"&dir="+Number(DIR_)+"&object_id="+id,

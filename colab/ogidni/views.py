@@ -56,34 +56,143 @@ def vote(request):
         downvotes = 0
         if object_id:
             if parent is 1:
-                reply_object = Story.objects.get(id=int(object_id))
+                story_object = Story.objects.get(id=int(object_id))
+
+                try:
+                    # opposite of registered vote already exists
+                    vote_exists = Vote.objects.get(user=request.user,
+                            story=story_object, direction=not direction)
+                    if story_object:
+                        if direction is 1:
+                            upvotes = story_object.upvotes + 1
+                            story_object.upvotes = upvotes
+                            downvotes = story_object.downvotes - 1
+                            story_object.downvotes = downvotes
+                        elif direction is 0:
+                            downvotes = story_object.downvotes + 1
+                            story_object.downvotes = downvotes
+                            upvotes = story_object.upvotes - 1
+                            story_object.upvotes = upvotes
+                        else:
+                            return HttpResponse(status=400)
+                        
+                        vote_created = Vote.objects.create(user=request.user,
+                            story=story_object, direction=direction)
+
+                        vote_exists.delete()
+                        story_object.save()
+                    
+                except Vote.DoesNotExist:
+                    vote_created = Vote.objects.get_or_create(user=request.user,
+                            story=story_object, direction=direction)
+                    
+                    if not vote_created[1]:
+                        # vote already exists so undo original vote
+                        if story_object:
+                            if direction is 1:
+                                upvotes = story_object.upvotes - 1 # remove upvote
+                                story_object.upvotes = upvotes
+                                downvotes = story_object.downvotes
+                            elif direction is 0:
+                                downvotes = story_object.downvotes - 1  # remove downvote
+                                story_object.downvotes = downvotes
+                                upvotes = story_object.upvotes
+                            else:
+                                return HttpResponse(status=400)
+        
+                        # cleanup: remove vote object that already exists
+                        Vote.objects.get(user=request.user, story=story_object,
+                                direction=direction).delete()
+                        story_object.save()
+                    else:
+                        if story_object:
+                            if direction is 1:
+                                upvotes = story_object.upvotes + 1
+                                story_object.upvotes = upvotes
+                                downvotes = story_object.downvotes
+                            elif direction is 0:
+                                downvotes = story_object.downvotes + 1
+                                story_object.downvotes = downvotes
+                                upvotes = story_object.upvotes
+                            else:
+                                return HttpResponse(status=400)
+                        story_object.save()
             elif parent is 2:
+                # vote on a reply
                 reply_object = Reply.objects.get(id=int(object_id))
+
+                try:
+                    # opposite of registered vote already exists
+                    vote_exists = Vote.objects.get(user=request.user,
+                            reply=reply_object, direction=not direction)
+                    if reply_object:
+                        if direction is 1:
+                            upvotes = reply_object.upvotes + 1
+                            reply_object.upvotes = upvotes
+                            downvotes = reply_object.downvotes - 1
+                            reply_object.downvotes = downvotes
+                        elif direction is 0:
+                            downvotes = reply_object.downvotes + 1
+                            reply_object.downvotes = downvotes
+                            upvotes = reply_object.upvotes - 1
+                            reply_object.upvotes = upvotes
+                        else:
+                            return HttpResponse(status=400)
+                        
+                        vote_created = Vote.objects.create(user=request.user,
+                            reply=reply_object, direction=direction)
+
+                        vote_exists.delete()
+                        reply_object.save()
+                    
+                except Vote.DoesNotExist:
+                    vote_created = Vote.objects.get_or_create(user=request.user,
+                            reply=reply_object, direction=direction)
+                    
+                    if not vote_created[1]:
+                        # vote already exists so undo original vote
+                        if reply_object:
+                            if direction is 1:
+                                upvotes = reply_object.upvotes - 1 # remove upvote
+                                reply_object.upvotes = upvotes
+                                downvotes = reply_object.downvotes
+                            elif direction is 0:
+                                downvotes = reply_object.downvotes - 1  # remove downvote
+                                reply_object.downvotes = downvotes
+                                upvotes = reply_object.upvotes
+                            else:
+                                return HttpResponse(status=400)
+        
+                        # cleanup: remove vote object that already exists
+                        Vote.objects.get(user=request.user, reply=reply_object,
+                                direction=direction).delete()
+                        reply_object.save()
+                    else:
+                        if reply_object:
+                            if direction is 1:
+                                upvotes = reply_object.upvotes + 1
+                                reply_object.upvotes = upvotes
+                                downvotes = reply_object.downvotes
+                            elif direction is 0:
+                                downvotes = reply_object.downvotes + 1
+                                reply_object.downvotes = downvotes
+                                upvotes = reply_object.upvotes
+                            else:
+                                return HttpResponse(status=400)
+                        reply_object.save()
+                    
             else:
-                return HttpResponse(status=400)
-
-            if reply_object:
-                if direction is 1:
-                    upvotes = reply_object.upvotes + 1
-                    reply_object.upvotes = upvotes
-                    downvotes = reply_object.downvotes
-                elif direction is 2:
-                    downvotes = reply_object.downvotes + 1
-                    reply_object.downvotes = downvotes
-                    upvotes = reply_object.upvotes
-                else:
-                    return HttpResponse(status=400)
-
-                reply_object.save()
-
-                response_data = {'loggedIn': True, 'votes':
-                                {'upvotes': upvotes, 'downvotes': downvotes}}
-                return HttpResponse(json.dumps(response_data), content_type="application/json")
-            else:
+                # parent unknown
                 return HttpResponse(status=500)
+
+            response_data = {'loggedIn': True, 'votes':
+                            {'upvotes': upvotes, 'downvotes': downvotes}}
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
         else:
+            # no object_id 
             return HttpResponse(status=500)
     else:
+        # user not authenticated
         response_data = {'loggedIn': False, 'votes':
                         {'upvotes': 0, 'downvotes': 0}}
         return HttpResponse(json.dumps(response_data), content_type="application/json")
